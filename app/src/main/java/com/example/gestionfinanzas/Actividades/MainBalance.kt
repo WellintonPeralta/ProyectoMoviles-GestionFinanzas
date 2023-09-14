@@ -8,20 +8,30 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.example.gestionfinanzas.Modelos.BaseDeDatosFirestore
+import com.example.gestionfinanzas.Modelos.Cuenta
 import com.example.gestionfinanzas.R
 
 class MainBalance : AppCompatActivity() {
+    private var cuenta: Cuenta? = null
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_balance)
 
-        // LOGIN
-        val correo = findViewById<TextView>(R.id.txt_correo).text
-        val contrasenia = findViewById<TextView>(R.id.txt_contrasenia).text
+        // Recepcion de id del usuario
+        val idUsuario = intent.getStringExtra("idPersona")
 
-        val usuario = BaseDeDatosFirestore.verificarUsuario(correo as String, contrasenia as String)
-        if (usuario != null){
+        if (idUsuario != null){
+            //Balance de la cuenta del usuario
+            cuenta = BaseDeDatosFirestore.obtenerCuentaPorUsuario(idUsuario)
+
+            if (cuenta != null) {
+                findViewById<TextView>(R.id.txt_total_ingreso).text = cuenta!!.totalIngresos.toString()
+                findViewById<TextView>(R.id.txt_total_gastos).text = cuenta!!.totalGastos.toString()
+                findViewById<TextView>(R.id.txt_total_balance).text = cuenta!!.saldoTotal.toString()
+            }
+
             // Main Activity
             val btn_agregarIngreso = findViewById<Button>(R.id.btn_nuevo_ingreso)
             val btn_agregarGasto = findViewById<Button>(R.id.btn_nuevo_gasto)
@@ -54,9 +64,7 @@ class MainBalance : AppCompatActivity() {
 
     private fun irActividad(activity: Class<*>, params: Bundle? = null) {
         val intent = Intent(this, activity)
-        if (params != null) {
-            intent.putExtras(params)
-        }
+        intent.putExtra("idCuenta", cuenta?.idCuenta)
         startActivity(intent)
     }
 }

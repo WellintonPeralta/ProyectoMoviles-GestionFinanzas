@@ -24,21 +24,41 @@ class BaseDeDatosFirestore {
                 .whereEqualTo("contrasenia", contrasenia)
 
             usuarioRef.get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val document = querySnapshot.documents[0]
+                        usuario = document.toObject(Persona::class.java)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("TAG", "Error al verificar usuario: $e")
+                }
+            return  usuario
+        }
+
+        fun obtenerCuentaPorUsuario(idUsuario: String): Cuenta?{
+            var cuenta: Cuenta? = null
+            val cuentaRef = db.collection("Cuenta")
+                .whereEqualTo("idPersona", idUsuario)
+
+            cuentaRef.get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
-                        val idPersona = document.id
-                        val nombre = document.getString("nombre")?: ""
-                        val correo = document.getString("correo")?: ""
-                        val contrasenia = document.getString("contrasenia")?: ""
+                        val idCuenta = document.id
+                        val idPersona = document.getString("idPersona")?: ""
+                        val fechaCreacion = document.getString("fechaCreacion")?: ""
+                        val saldoTotal = document.getString("saldoTotal")?.toDouble() ?: 0.0
+                        val totalIngresos = document.getString("totalIngresos")?.toDouble() ?: 0.0
+                        val totalGastos = document.getString("totalGastos")?.toDouble() ?: 0.0
 
-                        usuario = Persona(idPersona, nombre, correo, contrasenia)
+                        cuenta = Cuenta(idCuenta, idPersona, fechaCreacion, saldoTotal, totalIngresos, totalGastos)
                     }
                 }
                 .addOnFailureListener { e ->
                     // Captura y registra la excepción en el logcat
-                    Log.e("Auteneticacion", "Error al logear usuario: ${e.message}", e)
+                    Log.e("Cuenta", "Error al cargar la cuenta del usuario: ${e.message}", e)
                 }
-            return  usuario
+            return  cuenta
         }
 
 
