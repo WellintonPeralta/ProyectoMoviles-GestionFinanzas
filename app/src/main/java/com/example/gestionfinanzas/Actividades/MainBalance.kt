@@ -26,6 +26,8 @@ class MainBalance : AppCompatActivity() {
             //Balance de la cuenta del usuario
             cuenta = BaseDeDatosFirestore.obtenerCuentaPorUsuario(idUsuario)
 
+
+
             if (cuenta != null) {
                 findViewById<TextView>(R.id.txt_total_ingreso).text = cuenta!!.totalIngresos.toString()
                 findViewById<TextView>(R.id.txt_total_gastos).text = cuenta!!.totalGastos.toString()
