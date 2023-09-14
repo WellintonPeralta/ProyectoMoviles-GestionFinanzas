@@ -1,10 +1,11 @@
-package com.example.gestionfinanzas
+package com.example.gestionfinanzas.Actividades
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.gestionfinanzas.R
 
 class RegistrarGastos : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")

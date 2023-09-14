@@ -1,27 +1,25 @@
-package com.example.gestionfinanzas
+package com.example.gestionfinanzas.Actividades
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.gestionfinanzas.R
 
-class MainBalance : AppCompatActivity() {
+class RegistrarIngresos : AppCompatActivity() {
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_balance)
+        setContentView(R.layout.activity_registrar_ingresos)
 
-        val btn_agregarIngreso = findViewById<Button>(R.id.btn_nuevo_ingreso)
-        val btn_agregarGasto = findViewById<Button>(R.id.btn_nuevo_gasto)
+        val btn_guardar_ingreso = findViewById<Button>(R.id.btn_guardar_gasto)
 
-        btn_agregarIngreso.setOnClickListener {
-            irActividad(RegistrarIngresos::class.java)
+        btn_guardar_ingreso.setOnClickListener {
+            irActividad(MainBalance::class.java)
         }
-
-        btn_agregarGasto.setOnClickListener {
-            irActividad(RegistrarGastos::class.java)
-        }
-
     }
+
     override fun onStart() {
         super.onStart()
     }
