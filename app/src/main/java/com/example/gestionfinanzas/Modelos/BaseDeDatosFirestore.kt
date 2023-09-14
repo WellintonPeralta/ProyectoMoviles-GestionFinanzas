@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
 class BaseDeDatosFirestore {
+
     val arreglo: ArrayList<Persona> = arrayListOf()
     private val db = FirebaseFirestore.getInstance()
 
