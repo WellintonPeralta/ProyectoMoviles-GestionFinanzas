@@ -1,13 +1,13 @@
 package com.example.gestionfinanzas.Modelos
 
 class Persona {
-    var idPersona: Int
+    var idPersona: String
     var nombre: String
     var correo: String
     var contrasenia: String
 
     constructor(
-        idPersona: Int,
+        idPersona: String,
         nombre: String,
         correo: String,
         contrasenia: String
