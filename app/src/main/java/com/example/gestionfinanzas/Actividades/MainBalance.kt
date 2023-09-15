@@ -12,7 +12,7 @@ import com.example.gestionfinanzas.Modelos.Cuenta
 import com.example.gestionfinanzas.R
 
 class MainBalance : AppCompatActivity() {
-    private var cuenta: Cuenta? = null
+    private var cuentaUsuario: Cuenta? = null
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,12 +30,13 @@ class MainBalance : AppCompatActivity() {
             //Balance de la cuenta del usuario
             BaseDeDatosFirestore.obtenerCuentaPorIdPersona(idUsuario){ cuenta ->
                 if (cuenta != null) {
-                    // Aquí puedes trabajar con la instancia de Cuenta
+                    cuentaUsuario = cuenta
+
                     txtSaldoTotal.text = "$ ${cuenta.saldoTotal}"
                     txtTotalIngresos.text = "$ ${cuenta.totalIngresos}"
                     txtTotalGastos.text = "$ ${cuenta.totalGastos}"
                 } else {
-                    // Manejar el caso en que los datos sean nulos o no se encuentre ningún documento
+                        Log.i("Cuenta", "Error")
                 }
             }
 
@@ -71,7 +72,7 @@ class MainBalance : AppCompatActivity() {
 
     private fun irActividad(activity: Class<*>, params: Bundle? = null) {
         val intent = Intent(this, activity)
-        intent.putExtra("idCuenta", cuenta?.idCuenta)
+        intent.putExtra("idCuenta", cuentaUsuario?.idCuenta)
         startActivity(intent)
     }
 }

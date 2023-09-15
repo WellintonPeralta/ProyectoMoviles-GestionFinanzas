@@ -107,6 +107,7 @@
             android:layout_height="37dp"
             android:layout_gravity="center"
             android:text="Detalles"
+            android:textColorLink="#673AB7"
             android:textSize="12sp" />
 
         <TextView
