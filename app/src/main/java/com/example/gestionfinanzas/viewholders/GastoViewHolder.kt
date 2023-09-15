@@ -1,21 +1,16 @@
 package com.example.exameniib.viewholders
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.util.Log
 import android.view.ContextMenu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exameniib.adapters.GastosAdapter
 import com.example.gestionfinanzas.Modelos.Gasto
-import com.example.gestionfinanzas.Modelos.Ingreso
 import com.example.gestionfinanzas.R
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view),
     View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {

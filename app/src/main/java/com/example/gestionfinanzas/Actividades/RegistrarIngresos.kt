@@ -9,6 +9,8 @@ import android.widget.EditText
 import com.example.gestionfinanzas.Modelos.BaseDeDatosFirestore
 import com.example.gestionfinanzas.Modelos.Gasto
 import com.example.gestionfinanzas.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class RegistrarIngresos : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -18,8 +20,10 @@ class RegistrarIngresos : AppCompatActivity() {
 
         val btn_guardar_ingreso = findViewById<Button>(R.id.btn_guardar_ingreso)
 
+        val idCuenta = intent.getStringExtra("idCuenta")
+
         btn_guardar_ingreso.setOnClickListener {
-            guardarIngreso()
+            guardarIngreso(idCuenta)
         }
 
 
@@ -32,13 +36,16 @@ class RegistrarIngresos : AppCompatActivity() {
 
     private fun irActividad(activity: Class<*>, params: Bundle? = null) {
         val intent = Intent(this, activity)
-        if (params != null) {
-            intent.putExtras(params)
+        val auth = FirebaseAuth.getInstance()
+        // Verifica si hay un usuario autenticado
+        val usuarioActual: FirebaseUser? = auth.currentUser
+        if (usuarioActual != null){
+            intent.putExtra("idPersona", usuarioActual.uid)
         }
         startActivity(intent)
     }
 
-    fun guardarIngreso() {
+    fun guardarIngreso(idCuenta: String?) {
         val monto = findViewById<EditText>(R.id.txt_monto_ingreso)
         val fecha = findViewById<EditText>(R.id.txt_fecha_ingreso)
         val categoria = findViewById<EditText>(R.id.txt_categoria_ingreso)
@@ -52,7 +59,7 @@ class RegistrarIngresos : AppCompatActivity() {
         ) {
             BaseDeDatosFirestore.crearIngreso(
                 Gasto(
-                    1,
+                    idCuenta?: "",
                     monto.text.toString().toDouble(),
                     fecha.text.toString(),
                     categoria.text.toString(),
@@ -60,8 +67,9 @@ class RegistrarIngresos : AppCompatActivity() {
                 )
             )
             finish()
-
-
         }
+        BaseDeDatosFirestore.actualizarTotalIngresos(idCuenta?:"")
+        BaseDeDatosFirestore.actualizarSaldoTotal(idCuenta?:"")
+        irActividad(MainBalance::class.java)
     }
 }

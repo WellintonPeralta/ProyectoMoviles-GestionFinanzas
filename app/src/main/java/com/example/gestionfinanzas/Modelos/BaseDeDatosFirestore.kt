@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BaseDeDatosFirestore {
@@ -48,9 +49,9 @@ class BaseDeDatosFirestore {
                         val idPersona = document.getString("idPersona")?: ""
                         val totalGastos = document.getDouble("totalGastos")
                         val totalIngresos = document.getDouble("totalIngresos")
-                        val fechaCreacion = document.getString("fechaCreacion")
+                        val fechaCreacion = document.getString("fechaCreacion")?: ""
 
-                        if (saldoTotal != null && totalGastos != null && totalIngresos != null && fechaCreacion != null) {
+                        if (saldoTotal != null && totalGastos != null && totalIngresos != null) {
                             val cuenta = Cuenta(document.id, idPersona, fechaCreacion, saldoTotal, totalIngresos, totalGastos)
                             callback(cuenta)
                         } else {
@@ -178,7 +179,7 @@ class BaseDeDatosFirestore {
         }
 
 
-        fun registrarUsuarioEnFirebase(
+        fun registrarUsuarioConCuentaEnFirebase(
             email: String,
             contrasenia: String,
             nombre: String,
@@ -197,20 +198,39 @@ class BaseDeDatosFirestore {
                         // Crear un documento de usuario en Firestore
                         val usuarioData = hashMapOf(
                             "nombre" to nombre,
-                            "correo" to email
-                            // Agrega otros campos de usuario si es necesario
+                            "correo" to email,
+                            "contrasenia" to contrasenia
                         )
 
                         usuario?.uid?.let { uid ->
-                            val usuariosRef = db.collection("Usuarios")
+                            val usuariosRef = db.collection("Persona")
                             usuariosRef.document(uid)
                                 .set(usuarioData)
                                 .addOnSuccessListener {
                                     // Documento de usuario creado en Firestore
-                                    callback(true, usuario)
+                                    // Ahora, crea una cuenta para el usuario
+                                    val cuentaData = hashMapOf(
+                                        "idPersona" to uid,
+                                        "saldoTotal" to 0.0, // Puedes establecer un saldo inicial si es necesario
+                                        "totalGastos" to 0.0,
+                                        "totalIngresos" to 0.0,
+                                        "fechaCreacion" to ""
+                                        // Agrega otros campos de cuenta según tus necesidades
+                                    )
+
+                                    val cuentasRef = db.collection("Cuenta")
+                                    cuentasRef.add(cuentaData)
+                                        .addOnSuccessListener {
+                                            // Cuenta creada exitosamente
+                                            callback(true, usuario)
+                                        }
+                                        .addOnFailureListener { e ->
+                                            // Error al crear la cuenta en Firestore
+                                            callback(false, null)
+                                        }
                                 }
                                 .addOnFailureListener { e ->
-                                    // Error al crear el documento en Firestore
+                                    // Error al crear el documento de usuario en Firestore
                                     callback(false, null)
                                 }
                         } ?: run {

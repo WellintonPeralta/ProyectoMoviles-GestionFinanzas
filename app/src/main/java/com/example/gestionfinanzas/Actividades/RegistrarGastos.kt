@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import com.example.gestionfinanzas.Modelos.BaseDeDatosFirestore
+import com.example.gestionfinanzas.Modelos.Cuenta
 import com.example.gestionfinanzas.Modelos.Gasto
 import com.example.gestionfinanzas.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class RegistrarGastos : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -16,9 +19,10 @@ class RegistrarGastos : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar_gastos)
         val btn_guardar_gasto = findViewById<Button>(R.id.btn_guardar_ingreso)
+        val idCuenta = intent.getStringExtra("idCuenta")
 
         btn_guardar_gasto.setOnClickListener {
-            guardarGasto()
+            guardarGasto(idCuenta)
         }
     }
 
@@ -28,13 +32,16 @@ class RegistrarGastos : AppCompatActivity() {
 
     private fun irActividad(activity: Class<*>, params: Bundle? = null) {
         val intent = Intent(this, activity)
-        if (params != null) {
-            intent.putExtras(params)
+        val auth = FirebaseAuth.getInstance()
+        // Verifica si hay un usuario autenticado
+        val usuarioActual: FirebaseUser? = auth.currentUser
+        if (usuarioActual != null){
+            intent.putExtra("idPersona", usuarioActual.uid)
         }
         startActivity(intent)
     }
 
-    fun guardarGasto(){
+    fun guardarGasto(idCuenta: String?){
         val monto = findViewById<EditText>(R.id.txt_monto_gasto)
         val fecha = findViewById<EditText>(R.id.txt_fecha_gasto)
         val categoria = findViewById<EditText>(R.id.txt_categoria_gasto)
@@ -48,7 +55,7 @@ class RegistrarGastos : AppCompatActivity() {
         ) {
             BaseDeDatosFirestore.crearGasto(
                 Gasto(
-                1,
+                idCuenta?: "",
                 monto.text.toString().toDouble(),
                 fecha.text.toString(),
                 categoria.text.toString(),
@@ -56,8 +63,9 @@ class RegistrarGastos : AppCompatActivity() {
             )
             )
             finish()
-
-
         }
+        BaseDeDatosFirestore.actualizarTotalGastos(idCuenta?:"")
+        BaseDeDatosFirestore.actualizarSaldoTotal(idCuenta?:"")
+        irActividad(MainBalance::class.java)
     }
 }

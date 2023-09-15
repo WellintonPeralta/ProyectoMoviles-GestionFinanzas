@@ -6,11 +6,8 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exameniib.adapters.GastosAdapter
-import com.example.exameniib.adapters.IngresosAdapter
 import com.example.exameniib.viewholders.GastoViewHolder
-import com.example.exameniib.viewholders.IngresoViewHolder
 import com.example.gestionfinanzas.Modelos.Gasto
-import com.example.gestionfinanzas.Modelos.Ingreso
 import com.example.gestionfinanzas.R
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -49,7 +46,7 @@ class DetalleGastos : AppCompatActivity() {
                     val monto = document.getDouble("monto")
 
                     if (categoria != null && descripcion != null && fecha != null && monto != null) {
-                        val gasto = Gasto(idCuenta, monto, fecha, categoria, descripcion)
+                        val gasto = Gasto(document.id, monto, fecha, categoria, descripcion)
                         arreglo.add(gasto)
                     } else {
                         Log.i("Gsato", "Datos incompletos")

@@ -32,9 +32,13 @@ class MainBalance : AppCompatActivity() {
                 if (cuenta != null) {
                     cuentaUsuario = cuenta
 
-                    txtSaldoTotal.text = "$ ${cuenta.saldoTotal}"
-                    txtTotalIngresos.text = "$ ${cuenta.totalIngresos}"
-                    txtTotalGastos.text = "$ ${cuenta.totalGastos}"
+                    val saldoTotalText = String.format("%.2f", cuenta.saldoTotal)
+                    val totalIngresosText = String.format("%.2f", cuenta.totalIngresos)
+                    val totalGastosText = String.format("%.2f", cuenta.totalGastos)
+
+                    txtSaldoTotal.text = "$ $saldoTotalText"
+                    txtTotalIngresos.text = "$ $totalIngresosText"
+                    txtTotalGastos.text = "$ $totalGastosText"
                 } else {
                         Log.i("Cuenta", "Error")
                 }
@@ -51,6 +55,8 @@ class MainBalance : AppCompatActivity() {
             }
             btn_agregarGasto.setOnClickListener {
                 irActividad(RegistrarGastos::class.java)
+                BaseDeDatosFirestore.actualizarTotalIngresos(cuentaUsuario?.idCuenta?:"")
+                BaseDeDatosFirestore.actualizarSaldoTotal(cuentaUsuario?.idCuenta?:"")
             }
             btn_detallesIngreso.setOnClickListener {
                 irActividad(DetalleIngresos::class.java)
