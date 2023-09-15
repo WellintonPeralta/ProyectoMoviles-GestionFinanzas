@@ -80,10 +80,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_correo"
-                    android:layout_width="240dp"
+                    android:layout_width="296dp"
                     android:layout_height="56dp"
                     android:hint="nombre de usuario"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -100,18 +100,19 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <EditText
+                android:id="@+id/txt_contrasenia"
+                android:layout_width="292dp"
+                android:layout_height="61dp"
+                android:layout_gravity="center"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textPassword" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_contrasenia"
-                    android:layout_width="247dp"
-                    android:layout_height="56dp"
-                    android:hint="contraseña"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:gravity="center"/>
 
         </LinearLayout>
 
