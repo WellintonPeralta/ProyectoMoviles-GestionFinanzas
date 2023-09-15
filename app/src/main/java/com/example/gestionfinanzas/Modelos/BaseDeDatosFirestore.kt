@@ -2,6 +2,9 @@ package com.example.gestionfinanzas.Modelos
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -17,48 +20,61 @@ class BaseDeDatosFirestore {
         private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
         // Métodos para Persona
-        fun verificarUsuario(correo: String, contrasenia: String): Persona? {
-            var usuario: Persona? = null
-            val usuarioRef = db.collection("Persona")
-                .whereEqualTo("correo", correo)
-                .whereEqualTo("contrasenia", contrasenia)
+        fun signInWithEmailAndPassword(email: String, password: String, callback: (Boolean) -> Unit) {
+            val auth = FirebaseAuth.getInstance()
 
-            usuarioRef.get()
+            // Intenta iniciar sesión con el correo y la contraseña proporcionados
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // La autenticación fue exitosa
+                        callback(true)
+                    } else {
+                        // La autenticación falló
+                        val exception = task.exception
+                        if (exception is FirebaseAuthInvalidUserException) {
+                            // El correo no está registrado
+                            callback(false)
+                        } else if (exception is FirebaseAuthInvalidCredentialsException) {
+                            // La contraseña es incorrecta
+                            callback(false)
+                        } else {
+                            // Otra excepción, manejar según sea necesario
+                            callback(false)
+                        }
+                    }
+                }
+        }
+
+        fun obtenerCuentaPorIdPersona(idPersona: String, callback: (Cuenta?) -> Unit) {
+            val db = FirebaseFirestore.getInstance()
+            val cuentasRef = db.collection("cuentas") // Reemplaza "cuentas" con el nombre de tu colección en Firestore
+
+            cuentasRef
+                .whereEqualTo("idPersona", idPersona)
+                .get()
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
                         val document = querySnapshot.documents[0]
-                        usuario = document.toObject(Persona::class.java)
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("TAG", "Error al verificar usuario: $e")
-                }
-            return  usuario
-        }
-
-        fun obtenerCuentaPorUsuario(idUsuario: String): Cuenta?{
-            var cuenta: Cuenta? = null
-            val cuentaRef = db.collection("Cuenta")
-                .whereEqualTo("idPersona", idUsuario)
-
-            cuentaRef.get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val idCuenta = document.id
+                        val saldoTotal = document.getDouble("saldoTotal")
                         val idPersona = document.getString("idPersona")?: ""
-                        val fechaCreacion = document.getString("fechaCreacion")?: ""
-                        val saldoTotal = document.getString("saldoTotal")?.toDouble() ?: 0.0
-                        val totalIngresos = document.getString("totalIngresos")?.toDouble() ?: 0.0
-                        val totalGastos = document.getString("totalGastos")?.toDouble() ?: 0.0
+                        val totalGastos = document.getDouble("totalGastos")
+                        val totalIngresos = document.getDouble("totalIngresos")
+                        val fechaCreacion = document.getString("fechaCreacion")
 
-                        cuenta = Cuenta(idCuenta, idPersona, fechaCreacion, saldoTotal, totalIngresos, totalGastos)
+                        if (saldoTotal != null && totalGastos != null && totalIngresos != null && fechaCreacion != null) {
+                            val cuenta = Cuenta(document.id, idPersona, fechaCreacion, saldoTotal, totalIngresos, totalGastos)
+                            callback(cuenta)
+                        } else {
+                            callback(null) // Datos incompletos o nulos
+                        }
+                    } else {
+                        callback(null) // No se encontraron documentos con el idPersona proporcionado
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Captura y registra la excepción en el logcat
-                    Log.e("Cuenta", "Error al cargar la cuenta del usuario: ${e.message}", e)
+                    callback(null) // Error de consulta
                 }
-            return  cuenta
         }
 
 

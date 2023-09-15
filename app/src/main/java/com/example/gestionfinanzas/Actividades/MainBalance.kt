@@ -14,7 +14,7 @@ import com.example.gestionfinanzas.R
 class MainBalance : AppCompatActivity() {
     private var cuenta: Cuenta? = null
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_balance)
@@ -23,15 +23,20 @@ class MainBalance : AppCompatActivity() {
         val idUsuario = intent.getStringExtra("idPersona")
 
         if (idUsuario != null){
+            val txtSaldoTotal = findViewById<TextView>(R.id.txt_total_balance)
+            val txtTotalIngresos = findViewById<TextView>(R.id.txt_total_ingreso)
+            val txtTotalGastos = findViewById<TextView>(R.id.txt_total_gastos)
+
             //Balance de la cuenta del usuario
-            cuenta = BaseDeDatosFirestore.obtenerCuentaPorUsuario(idUsuario)
-
-
-
-            if (cuenta != null) {
-                findViewById<TextView>(R.id.txt_total_ingreso).text = cuenta!!.totalIngresos.toString()
-                findViewById<TextView>(R.id.txt_total_gastos).text = cuenta!!.totalGastos.toString()
-                findViewById<TextView>(R.id.txt_total_balance).text = cuenta!!.saldoTotal.toString()
+            BaseDeDatosFirestore.obtenerCuentaPorIdPersona(idUsuario){ cuenta ->
+                if (cuenta != null) {
+                    // Aquí puedes trabajar con la instancia de Cuenta
+                    txtSaldoTotal.text = "$ ${cuenta.saldoTotal}"
+                    txtTotalIngresos.text = "$ ${cuenta.totalIngresos}"
+                    txtTotalGastos.text = "$ ${cuenta.totalGastos}"
+                } else {
+                    // Manejar el caso en que los datos sean nulos o no se encuentre ningún documento
+                }
             }
 
             // Main Activity
