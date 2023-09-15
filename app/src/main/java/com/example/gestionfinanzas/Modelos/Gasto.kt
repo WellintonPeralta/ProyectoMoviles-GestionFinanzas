@@ -1,14 +1,14 @@
 package com.example.gestionfinanzas.Modelos
 
 class Gasto {
-    var idCuenta: String
+    var idCuenta: Int
     var monto:Double
     var fecha: String
     var categoria: String
     var descripcion: String
 
     constructor(
-        idCuenta: String,
+        idCuenta: Int,
         monto:Double,
         fecha: String,
         categoria: String,

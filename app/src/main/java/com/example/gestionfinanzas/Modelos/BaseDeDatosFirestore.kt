@@ -77,6 +77,30 @@ class BaseDeDatosFirestore {
                 }
         }
 
+        fun crearIngreso(gasto: Gasto) {
+            db.collection("Ingreso")
+                .document(gasto.descripcion)
+                .set(gasto)
+                .addOnSuccessListener { documentReference ->
+                    println("Se agrego un ingreso")
+                }
+                .addOnFailureListener { e ->
+                    println("Error al agregar el gasto: $e")
+                }
+        }
+
+        fun crearGasto(gasto: Gasto) {
+            db.collection("Gasto")
+                .document(gasto.descripcion)
+                .set(gasto)
+                .addOnSuccessListener { documentReference ->
+                    println("Se agrego un gasto")
+                }
+                .addOnFailureListener { e ->
+                    println("Error al agregar el gasto: $e")
+                }
+        }
+
 
     }
 }

@@ -39,11 +39,16 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txt_monto_gasto"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="$" />
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_monto_gasto"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="$" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView6"
@@ -83,10 +88,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/txt_fecha_gasto"
                                 android:layout_width="match_parent"
-                                android:layout_height="42dp"
+                                android:layout_height="60dp"
                                 android:hint="día/mes/año" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -108,10 +119,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/txt_categoria_gasto"
                                 android:layout_width="match_parent"
-                                android:layout_height="42dp"
+                                android:layout_height="60dp"
                                 android:hint="categoría ingreso" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -132,14 +149,18 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="72dp">
+                    android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_descripcion_gasto"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Detalles" />
+                        android:layout_height="60dp"
+                        android:hint="Descripcion" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -147,7 +168,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_guardar_gasto"
+        android:id="@+id/btn_guardar_ingreso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
@@ -155,4 +176,13 @@
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="445dp"
+        android:layout_height="103dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:srcCompat="@drawable/franja"
+        tools:layout_editor_absoluteX="-17dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
